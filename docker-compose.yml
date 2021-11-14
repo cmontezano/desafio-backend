@@ -1,0 +1,49 @@
+version: '3.3'
+services:
+  app:
+    build:
+      context: ./docker/php
+      args:
+        uid: ${DOCKER_UID}
+    restart: always
+    depends_on:
+      - db
+    volumes:
+      - ./:/var/www
+      - ./docker/php/uploads.ini/:/usr/local/etc/php/conf.d/uploads.ini
+
+  nginx:
+    image: nginx:alpine
+    restart: unless-stopped
+    depends_on:
+      - app
+    volumes:
+      - ./:/var/www
+      - ./docker/nginx/conf.d/:/etc/nginx/conf.d/
+    ports:
+      - 80:80
+
+  db:
+    image: mysql:latest
+    restart: always
+    volumes:
+      - db:/var/lib/mysql/
+    environment:
+      - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
+      - MYSQL_DATABASE=${DB_DATABASE}
+      - MYSQL_USER=${DB_USERNAME}
+      - MYSQL_PASSWORD=${DB_PASSWORD}
+    ports:
+      - 3306:3306
+
+  redis:
+    image: 'redis:alpine'
+    ports:
+        - '${FORWARD_REDIS_PORT:-6379}:6379'
+    healthcheck:
+        test: ["CMD", "redis-cli", "ping"]
+        retries: 3
+        timeout: 5s
+
+volumes:
+  db:
