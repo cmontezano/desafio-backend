@@ -27,6 +27,9 @@ logs:
 migrate:
 	docker-compose exec app php artisan migrate
 
+migrate-rollback:
+	docker-compose exec app php artisan migrate:rollback
+
 shell:
 	docker-compose exec app /bin/sh
 
