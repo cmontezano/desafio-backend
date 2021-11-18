@@ -5,9 +5,9 @@ namespace App\Gateway;
 use App\Exceptions\TransactionNotAuthorized;
 use Illuminate\Support\Facades\Http;
 
-class TransactionAuth
+class NotificationServiceGateway
 {
-    protected $url = 'https://run.mocky.io/v3/8fafdd68-a090-496f-8c9a-3442cf30dae6';
+    protected $url = 'http://o4d9z.mocklab.io/notify';
     private $client;
 
     /**
@@ -18,13 +18,9 @@ class TransactionAuth
         $this->client = Http::baseUrl($this->url);
     }
 
-    /**
-     * @throws TransactionNotAuthorized
-     */
-    public function isAuthorized()
+    public function healthCheck()
     {
-        if (! $this->client->get('/')->ok()) {
-            throw new TransactionNotAuthorized();
-        }
+        // se falso salvar numa fila
+        return $this->client->get('/')->ok();
     }
 }
