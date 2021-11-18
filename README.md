@@ -26,3 +26,7 @@ At this point the `POST transaction` endpoint is ready to be reached.
 This project use some architectural concepts like Repositories, Services and Gateways.
 
 For the future, my plan is to use Event Sourcing architecture pattern to control the chain of events that occurs when a transaction is dispatched.
+
+## Database model
+
+![Database model](docs/db_er.png "Database model")
